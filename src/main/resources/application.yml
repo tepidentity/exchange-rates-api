@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: Exchange rate API
+springdoc:
+  api-docs:
+    path: /api-docs
+
