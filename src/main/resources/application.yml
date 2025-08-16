@@ -1,7 +1,46 @@
+# Spring
 spring:
   application:
     name: Exchange rate API
+
+# RDBMS
+  datasource:
+    url: jdbc:h2:mem:dev
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2.console:
+    path: /h2
+    enabled: true
+  liquibase:
+    change-log: classpath:liquibase/db.changelog-master.xml
+
+# Server
+server:
+  port: 8080
+
+# Client
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 2000
+        readTimeout: 2000
+        loggerLevel: basic
+
+# Free Currency API
+free_currency_api:
+  realtime-url: ${free_currency_api.base-url}/latest
+  base-url: https://api.freecurrencyapi.com/v1
+  api-key: fca_live_RliWncM8g2ywJcB2V3OpEvGLuv8iUp117xYihXx1
+
+# Documentation
 springdoc:
   api-docs:
     path: /api-docs
+  swagger-ui:
+    path: /docs
+    operationsSorter: method
 
