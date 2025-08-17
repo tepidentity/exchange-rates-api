@@ -47,14 +47,7 @@ public class ConversionService {
     @Transactional(readOnly = true)
     public List<ConversionCompletionDTO> history(Date date, UUID transactionId, Pageable pageable) {
         List<Conversion> resultSet;
-        if (date == null) {
-            if (transactionId == null) {
-                throw new IllegalArgumentException();
-            }
-            resultSet = conversionRepository.getOneByTransactionId(transactionId)
-                                            .map(List::of)
-                                            .orElseGet(Collections::emptyList);
-        } else {
+        if (date != null) {
             if (transactionId != null) {
                 resultSet = conversionRepository.getOneByDateAndTransactionId(date, transactionId)
                                                 .map(List::of)
@@ -62,6 +55,10 @@ public class ConversionService {
             } else {
                 resultSet = conversionRepository.findAllByDate(date, pageable);
             }
+        } else {
+            resultSet = conversionRepository.getOneByTransactionId(transactionId)
+                                            .map(List::of)
+                                            .orElseGet(Collections::emptyList);
         }
         return conversionMapper.toDTOs(resultSet);
     }

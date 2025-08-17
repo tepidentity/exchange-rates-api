@@ -1,5 +1,6 @@
 package com.zetta.exchangerates.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,22 +15,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-public class Conversion {
+public class Conversion extends BaseAuditableEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "conversion_seq_gen")
     @SequenceGenerator(name = "conversion_seq_gen", sequenceName = "conversion_seq", allocationSize = 1)
+    @Column(updatable = false, nullable = false)
     private Long id;
-    @NotNull
-    private UUID transactionId;
-    @NotNull
-    private ZonedDateTime date;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private Currency sourceCurrency;

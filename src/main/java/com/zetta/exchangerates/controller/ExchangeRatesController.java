@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.zetta.exchangerates.common.Constants.SOURCE_CURRENCY;
+import static com.zetta.exchangerates.common.Constants.TARGET_CURRENCY;
+
 @RestController
 @RequestMapping("/currency")
 @Validated
 public class ExchangeRatesController {
-
-    public static final String SOURCE_CURRENCY = "sourceCurrency";
-    public static final String TARGET_CURRENCY= "targetCurrency";
 
     private final ExchangeRatesService exchangeRatesService;
 

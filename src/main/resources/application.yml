@@ -20,6 +20,8 @@ spring:
 # Server
 server:
   port: 8080
+  error:
+    include-message: always
 
 # Client
 feign:
@@ -43,4 +45,3 @@ springdoc:
   swagger-ui:
     path: /docs
     operationsSorter: method
-

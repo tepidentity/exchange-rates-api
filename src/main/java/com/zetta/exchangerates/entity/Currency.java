@@ -10,7 +10,6 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor
 public enum Currency {
-
     EUR("Euro"),
     USD("US Dollar"),
     JPY("Japanese Yen"),

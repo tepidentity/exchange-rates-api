@@ -3,10 +3,13 @@ package com.zetta.exchangerates.service;
 import com.zetta.exchangerates.client.freecurrencyapi.FreeCurrencyAPIExchangeRatesClient;
 import com.zetta.exchangerates.dto.ExchangeRateDTO;
 import com.zetta.exchangerates.entity.Currency;
+import com.zetta.exchangerates.error.ExchangeRatesAPIParamsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.zetta.exchangerates.common.Constants.TARGET_CURRENCY;
 
 @Service
 public class FreeCurrencyAPIExchangeRatesService implements ExchangeRatesService {
@@ -24,6 +27,6 @@ public class FreeCurrencyAPIExchangeRatesService implements ExchangeRatesService
                                                                      .data()
                                                                      .get(targetCurrency.name()))
                        .map(ExchangeRateDTO::new)
-                       .orElseThrow(() -> new RuntimeException("aa"));
+                       .orElseThrow(() -> ExchangeRatesAPIParamsException.rejectClientParams(TARGET_CURRENCY));
     }
 }

@@ -2,6 +2,7 @@ package com.zetta.exchangerates.controller;
 
 import com.zetta.exchangerates.dto.ConversionCompletionDTO;
 import com.zetta.exchangerates.dto.ConversionDTO;
+import com.zetta.exchangerates.error.BadRequestParameters;
 import com.zetta.exchangerates.service.ConversionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,11 +22,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.zetta.exchangerates.common.Constants.TRANSACTION_DATE;
+import static com.zetta.exchangerates.common.Constants.TRANSACTION_ID;
+
 @RestController
 @RequestMapping("/conversion")
 @Validated
 public class ConversionController {
-
     private final ConversionService conversionService;
 
     @Autowired
@@ -39,14 +42,14 @@ public class ConversionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ConversionCompletionDTO>> history(@RequestParam(value = "transaction_id", required = false) UUID transactionId,
-                                                                 @RequestParam(value = "transaction_date", required = false)
+    public ResponseEntity<List<ConversionCompletionDTO>> history(@RequestParam(value = TRANSACTION_ID, required = false) UUID transactionId,
+                                                                 @RequestParam(value = TRANSACTION_DATE, required = false)
                                                                  @DateTimeFormat(pattern = "yyyy-MM-dd") Date transactionDate,
-                                                                 @RequestParam(value = "page", required = false, defaultValue="0") int page,
+                                                                 @RequestParam(value = "page", required = false, defaultValue="1") int page,
                                                                  @RequestParam(value = "pageSize", required = false, defaultValue="10") int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "date"));
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), pageSize, Sort.by(Sort.Direction.ASC, "date"));
         if (transactionDate == null && transactionId == null) {
-            throw new IllegalArgumentException();
+            throw BadRequestParameters.rejectParams("At least on of the fields is mandatory", TRANSACTION_ID, TRANSACTION_DATE);
         }
         return ResponseEntity.ok(conversionService.history(transactionDate, transactionId, pageable));
     }
