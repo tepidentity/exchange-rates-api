@@ -38,11 +38,11 @@ public class FreeCurrencyAPICustomFeignErrorDecoder implements ErrorDecoder {
             ValidationErrorResponse errorBody = extractErrorBody(response);
             if (errorBody != null && errorBody.errors() != null) {
                 String[] fields = errorBody.errors()
-                        .keySet()
-                        .stream()
-                        .map(this::serverToFreeCurrencyClientFieldMapping)
-                        .filter(Objects::nonNull)
-                        .toArray(String[]::new);
+                                           .keySet()
+                                           .stream()
+                                           .map(this::serverToFreeCurrencyClientFieldMapping)
+                                           .filter(Objects::nonNull)
+                                           .toArray(String[]::new);
                 if (fields.length > 0) {
                     return ExchangeRatesAPIParamsException.rejectClientParams(fields);
                 }

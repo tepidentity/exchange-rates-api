@@ -18,6 +18,6 @@ public class BadRequestParameters extends RuntimeException {
 
     protected static <T extends BadRequestParameters> T rejectParams(Function<String, T> build, String message, String... params) {
         String paramList = "['" + String.join("','", params) + "']";
-        return build.apply("%s! Rejected parameters are %s!".formatted(message, paramList));
+        return build.apply("%s! Rejected parameter names are %s!".formatted(message, paramList));
     }
 }

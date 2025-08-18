@@ -17,9 +17,9 @@ public final class TestUtils {
     public static String buildExchangeResponse(Map<String, Double> entries) {
         return "{ \"data\" : { "
                 + entries.entrySet()
-                .stream()
-                .map(e -> '"' + e.getKey() + "\" : " + e.getValue())
-                .collect(Collectors.joining(","))
+                         .stream()
+                         .map(e -> '"' + e.getKey() + "\" : " + e.getValue())
+                         .collect(Collectors.joining(","))
                 + "} }";
     }
 

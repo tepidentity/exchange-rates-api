@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 public class ExchangeRatesAPIParamsException extends BadRequestParameters {
     public static final String GENERIC_ERROR_MESSAGE = "ExchangeRatesAPI rejected the request!";
-    public static final String FIELD_SPECIFIC_ERROR_MESSAGE = "ExchangeRatesAPI rejected parameter values";
+    public static final String FIELD_SPECIFIC_ERROR_MESSAGE = "ExchangeRatesAPI rejected parameter names";
 
     protected ExchangeRatesAPIParamsException(String message) {
         super(message);

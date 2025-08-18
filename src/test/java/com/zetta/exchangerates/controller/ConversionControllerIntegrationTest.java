@@ -139,7 +139,6 @@ public class ConversionControllerIntegrationTest {
         assertTrue(result.getBody().isEmpty());
     }
 
-
     @DisplayName("History by TransactionId provided")
     @Test
     public void history_onlyIdProvided() {
@@ -188,7 +187,7 @@ public class ConversionControllerIntegrationTest {
         assertEquals(id, body.getFirst().transactionId());
     }
 
-    @DisplayName("History returns empty list when no input provided")
+    @DisplayName("History requires either transactionId or date")
     @Test
     public void history_noParamsProvided() {
         // when
