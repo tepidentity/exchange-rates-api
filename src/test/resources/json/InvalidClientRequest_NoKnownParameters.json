@@ -1,0 +1,9 @@
+{
+  "message" : "Validation error",
+  "errors" : {
+    "unknown1" : [ "Unknown." ],
+    "unknown2" : [ "Unknown." ],
+    "unknown3" : [ "Unknown." ]
+  },
+  "info" : "For more information, see documentation: https://freecurrencyapi.com/docs/status-codes#_422"
+}

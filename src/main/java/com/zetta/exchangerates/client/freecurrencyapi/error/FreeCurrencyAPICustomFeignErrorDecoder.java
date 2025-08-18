@@ -1,7 +1,6 @@
 package com.zetta.exchangerates.client.freecurrencyapi.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zetta.exchangerates.client.freecurrencyapi.FreeCurrencyAPIExchangeRatesClient;
 import com.zetta.exchangerates.error.ExchangeRatesAPIParamsException;
 import com.zetta.exchangerates.error.ExchangeRatesAPIRequestException;
 import feign.Response;
@@ -11,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import static com.zetta.exchangerates.common.Constants.BASE_CURRENCY;
 import static com.zetta.exchangerates.common.Constants.SOURCE_CURRENCY;
+import static com.zetta.exchangerates.common.Constants.TARGET_CURRENCIES;
 import static com.zetta.exchangerates.common.Constants.TARGET_CURRENCY;
 
 @Component
@@ -34,14 +36,16 @@ public class FreeCurrencyAPICustomFeignErrorDecoder implements ErrorDecoder {
         // Map status codes to exceptions
         if (status == HttpStatus.UNPROCESSABLE_ENTITY) {
             ValidationErrorResponse errorBody = extractErrorBody(response);
-            String[] fields = errorBody.errors()
-                    .keySet()
-                    .stream()
-                    .map(this::serverToFreeCurrencyClientFieldMapping)
-                    .filter(Objects::nonNull)
-                    .toArray(String[]::new);
-            if (fields.length > 0) {
-                return ExchangeRatesAPIParamsException.rejectClientParams(fields);
+            if (errorBody != null && errorBody.errors() != null) {
+                String[] fields = errorBody.errors()
+                        .keySet()
+                        .stream()
+                        .map(this::serverToFreeCurrencyClientFieldMapping)
+                        .filter(Objects::nonNull)
+                        .toArray(String[]::new);
+                if (fields.length > 0) {
+                    return ExchangeRatesAPIParamsException.rejectClientParams(fields);
+                }
             }
             return ExchangeRatesAPIParamsException.rejectedRequest();
         }
@@ -56,18 +60,19 @@ public class FreeCurrencyAPICustomFeignErrorDecoder implements ErrorDecoder {
         if (response == null || response.body() == null) {
             return null;
         }
-        try {
-            return objectMapper.readValue(new String(response.body().asInputStream().readAllBytes(), StandardCharsets.UTF_8),
-                                          ValidationErrorResponse.class);
-        } catch (Exception ex) {
+        try (InputStream bodyInputStream = response.body().asInputStream()) {
+            return objectMapper.readValue(new String(bodyInputStream.readAllBytes(),
+                                                     StandardCharsets.UTF_8),
+                                                     ValidationErrorResponse.class);
+        } catch (Exception ignored) {
             return null;
         }
     }
 
     private String serverToFreeCurrencyClientFieldMapping(String field) {
         return switch(field) {
-            case FreeCurrencyAPIExchangeRatesClient.BASE_CURRENCY -> SOURCE_CURRENCY;
-            case FreeCurrencyAPIExchangeRatesClient.TARGET_CURRENCIES -> TARGET_CURRENCY;
+            case BASE_CURRENCY -> SOURCE_CURRENCY;
+            case TARGET_CURRENCIES -> TARGET_CURRENCY;
             default -> null;
         };
     }

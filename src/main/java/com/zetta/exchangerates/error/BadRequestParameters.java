@@ -8,7 +8,7 @@ import java.util.function.Function;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class BadRequestParameters extends RuntimeException {
 
-    protected BadRequestParameters(String message) {
+    public BadRequestParameters(String message) {
         super(message);
     }
 

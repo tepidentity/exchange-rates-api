@@ -2,6 +2,7 @@ package com.zetta.exchangerates.client.freecurrencyapi;
 
 import com.zetta.exchangerates.client.freecurrencyapi.entity.FreeCurrencyAPIExchangeRatesResponse;
 import com.zetta.exchangerates.client.freecurrencyapi.error.FreeCurrencyAPICustomFeignErrorDecoder;
+import com.zetta.exchangerates.common.Constants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
              configuration = FreeCurrencyAPICustomFeignErrorDecoder.class)
 public interface FreeCurrencyAPIExchangeRatesClient {
 
-    String BASE_CURRENCY = "base_currency";
-    String TARGET_CURRENCIES = "currencies";
-
     @GetMapping
-    FreeCurrencyAPIExchangeRatesResponse getExchangeRates(@RequestParam(BASE_CURRENCY) String baseCurrency,
-                                                          @RequestParam(TARGET_CURRENCIES) String targetCurrencies);
+    FreeCurrencyAPIExchangeRatesResponse getExchangeRates(@RequestParam(Constants.BASE_CURRENCY) String baseCurrency,
+                                                          @RequestParam(Constants.TARGET_CURRENCIES) String targetCurrencies);
 }

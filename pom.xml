@@ -23,6 +23,10 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <liquibase-maven-plugin.version>4.27.0</liquibase-maven-plugin.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <mockito-core.version>5.12.0</mockito-core.version>
+        <mockito-junit-jupiter.version>5.12.0</mockito-junit-jupiter.version>
+        <junit-jupiter-params.version>5.12.0</junit-jupiter-params.version>
+        <wiremock-standalone.version>3.9.2</wiremock-standalone.version>
     </properties>
 
     <!-- Spring mvc -->
@@ -81,7 +85,32 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit-jupiter-params.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock-standalone.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
+
 
 	<dependencyManagement>
 		<dependencies>
@@ -123,18 +152,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-			<!--<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>-->
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
@@ -142,9 +159,6 @@
                 <configuration>
                     <driver>org.h2.Driver</driver>
                     <url>jdbc:h2:mem:dev</url>
-                    <!--username>carapp</username>
-                    <password />
-                    <outputChangeLogFile>src/main/resources/liquibase-outputChangeLog.xml</outputChangeLogFile-->
                 </configuration>
             </plugin>
 		</plugins>

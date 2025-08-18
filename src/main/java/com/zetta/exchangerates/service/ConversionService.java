@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,16 +36,19 @@ public class ConversionService {
 
     @Transactional
     public ConversionCompletionDTO convertAmount(ConversionDTO conversionDTO) {
-        Double rate = exchangeRatesService.exchangeRate(conversionDTO.getSourceCurrency(), conversionDTO.getTargetCurrency())
+        Double rate = exchangeRatesService.exchangeRate(conversionDTO.sourceCurrency(), conversionDTO.targetCurrency())
                                           .exchangeRate();
-        Double convertedAmount = convertAmount(conversionDTO.getAmount(), rate);
+        Double convertedAmount = convertAmount(conversionDTO.amount(), rate);
         Conversion conversion = conversionMapper.toEntity(conversionDTO, convertedAmount);
         conversion = conversionRepository.save(conversion);
         return conversionMapper.toDTO(conversion);
     }
 
     @Transactional(readOnly = true)
-    public List<ConversionCompletionDTO> history(Date date, UUID transactionId, Pageable pageable) {
+    public List<ConversionCompletionDTO> history(LocalDate date, UUID transactionId, Pageable pageable) {
+        if (date == null && transactionId == null) {
+            return Collections.emptyList();
+        }
         List<Conversion> resultSet;
         if (date != null) {
             if (transactionId != null) {
@@ -63,7 +66,7 @@ public class ConversionService {
         return conversionMapper.toDTOs(resultSet);
     }
 
-    public Double convertAmount(Double amount, Double rate) {
+    private Double convertAmount(Double amount, Double rate) {
         BigDecimal temp = BigDecimal.valueOf(amount);
         temp = temp.multiply(BigDecimal.valueOf(rate));
         temp = new BigDecimal(temp.toString(), new MathContext(15, RoundingMode.FLOOR));

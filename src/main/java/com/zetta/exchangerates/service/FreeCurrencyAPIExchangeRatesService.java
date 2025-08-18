@@ -3,6 +3,7 @@ package com.zetta.exchangerates.service;
 import com.zetta.exchangerates.client.freecurrencyapi.FreeCurrencyAPIExchangeRatesClient;
 import com.zetta.exchangerates.dto.ExchangeRateDTO;
 import com.zetta.exchangerates.entity.Currency;
+import com.zetta.exchangerates.error.BadRequestParameters;
 import com.zetta.exchangerates.error.ExchangeRatesAPIParamsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,12 @@ public class FreeCurrencyAPIExchangeRatesService implements ExchangeRatesService
 
     @Override
     public ExchangeRateDTO exchangeRate(Currency sourceCurrency, Currency targetCurrency) {
-        return Optional.ofNullable(freeCurrencyAPIExchangeRatesClient.getExchangeRates(sourceCurrency.name(), targetCurrency.name())
-                                                                     .data()
-                                                                     .get(targetCurrency.name()))
+        if (sourceCurrency == targetCurrency) {
+            throw new BadRequestParameters("Base currency and target currency should be different!");
+        }
+        return Optional.ofNullable(freeCurrencyAPIExchangeRatesClient.getExchangeRates(sourceCurrency.name(), targetCurrency.name()))
+                       .flatMap(response -> Optional.ofNullable(response.data()))
+                       .map(map -> map.get(targetCurrency.name()))
                        .map(ExchangeRateDTO::new)
                        .orElseThrow(() -> ExchangeRatesAPIParamsException.rejectClientParams(TARGET_CURRENCY));
     }

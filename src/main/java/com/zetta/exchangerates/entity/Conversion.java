@@ -7,19 +7,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.ZonedDateTime;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
+@ToString
 public class Conversion extends BaseAuditableEntity<Long> {
 
     @Id
@@ -38,10 +37,4 @@ public class Conversion extends BaseAuditableEntity<Long> {
     private Double sourceAmount;
     @NotNull
     private Double targetAmount;
-
-    @PrePersist
-    protected void onCreate() {
-        setDate(ZonedDateTime.now());
-        setTransactionId(java.util.UUID.randomUUID());
-    }
 }

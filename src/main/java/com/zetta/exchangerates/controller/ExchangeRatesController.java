@@ -1,5 +1,6 @@
 package com.zetta.exchangerates.controller;
 
+import com.zetta.exchangerates.dto.ExchangeRateDTO;
 import com.zetta.exchangerates.entity.Currency;
 import com.zetta.exchangerates.service.ExchangeRatesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class ExchangeRatesController {
     }
 
     @GetMapping("/exchangeRate")
-    public ResponseEntity<?> getExchangeRate(@RequestParam(SOURCE_CURRENCY) Currency sourceCurrency,
-                                             @RequestParam(TARGET_CURRENCY) Currency targetCurrency) {
+    public ResponseEntity<ExchangeRateDTO> getExchangeRate(@RequestParam(SOURCE_CURRENCY) Currency sourceCurrency,
+                                                           @RequestParam(TARGET_CURRENCY) Currency targetCurrency) {
         return ResponseEntity.ok(exchangeRatesService.exchangeRate(sourceCurrency, targetCurrency));
     }
 

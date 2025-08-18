@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,10 +44,10 @@ public class ConversionController {
     @GetMapping
     public ResponseEntity<List<ConversionCompletionDTO>> history(@RequestParam(value = TRANSACTION_ID, required = false) UUID transactionId,
                                                                  @RequestParam(value = TRANSACTION_DATE, required = false)
-                                                                 @DateTimeFormat(pattern = "yyyy-MM-dd") Date transactionDate,
+                                                                 @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate transactionDate,
                                                                  @RequestParam(value = "page", required = false, defaultValue="1") int page,
                                                                  @RequestParam(value = "pageSize", required = false, defaultValue="10") int pageSize) {
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), pageSize, Sort.by(Sort.Direction.ASC, "date"));
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), pageSize, Sort.by(Sort.Direction.ASC, "id"));
         if (transactionDate == null && transactionId == null) {
             throw BadRequestParameters.rejectParams("At least on of the fields is mandatory", TRANSACTION_ID, TRANSACTION_DATE);
         }
